@@ -13,6 +13,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 from twilio.rest import Client
 
+import os
+import shutil
+import requests
+
 msg_list = []
 
 while True:
@@ -27,8 +31,8 @@ while True:
     def start_driver():
         option = Options()
         # You can comment and uncomment the below 2 lines to get window or windowless mode of the google chrome.
-        option.add_argument('--headless')
-        option.add_argument('--disable-gpu')
+        # option.add_argument('--headless')
+        # option.add_argument('--disable-gpu')
         # Chrome driver manager automatically downloads the latest driver required to run google chrome using selenium.
         return webdriver.Chrome(executable_path=ChromeDriverManager().install(), chrome_options=option)
 
@@ -66,7 +70,7 @@ while True:
             links = [website_url + a['href'] for a in item_list]
             return links
         except Exception as e:
-            print("Error {} at {}".format(e, search_url))
+            #print("Error {} at {}".format(e, search_url))
             return None
 
 
@@ -89,7 +93,7 @@ while True:
                     break
             return container
         except Exception as e:
-            print("Error {} at {}".format(e, url))
+            #print("Error {} at {}".format(e, url))
             return None
 
 
@@ -101,17 +105,37 @@ while True:
 
     # this command is used to actually start the chrome browser
     driver = start_driver()
+    driver.get("https://www.ksl.com/myaccount/login?forward=https%3A%2F%2Fclassifieds.ksl.com%2F")
+
+    username = driver.find_element_by_name('email')
+    username.send_keys('canyonfsmith@gmail.com')
+
+    password = driver.find_element_by_name('password')
+    # password.click()
+    password.send_keys('Wolf7147')
+    # click on submit button
+    username.submit()
+    time.sleep(10)
+
     for keyword in keywords:
         search_url = keyword_url.format(keyword)
 
         data = []
-        print("Fetching urls from: ", search_url)
+        #print("Fetching urls from: ", search_url)
         # fetches all the urls first and then loop over them and fetches each product info one by one.
         urls = get_urls(driver, search_url, website_url)
+        
+##        dir_name = keyword
+##        
+##        try:   
+##            os.makedirs(dir_name)
+##        except:
+##            print ("already exist")
+            
         if urls:
-            print("{} items' urls obtained".format(len(urls)))
+            #print("{} items' urls obtained".format(len(urls)))
             for url in urls:
-                print("Fetching data from %s" % url)
+                #print("Fetching data from %s" % url)
                 container = get_container(driver, url)
                 # Below you can see the bs4 commands to get titles,price and seller info if the get_container() returns the container.
                 if container is not None:
@@ -127,17 +151,87 @@ while True:
                     sellerName = sellerName.text if sellerName else ''
                     sellerPhone = container.find('span', attrs={'class': 'listingContactSeller-optionText'})
                     sellerPhone = sellerPhone.text if sellerPhone else ''
-
                     #print (views)
                     #print (favorites)
                     
+                    #viewAllLink = driver.find_element_by_class_name('photoViewer-viewAllLink')
+                    #viewAllLink.click()
+                    #driver.execute_script("arguments[0].click();", viewAllLink)
+
+                    time.sleep(2)
+                    #img_urls = container.find('div', attrs={'class': 'photoDesktop-photoContainer'}).find_all('img')
+                    #print (img_urls)
+
+                    new_page = driver.page_source
+                    # Then this page source is passed to BeautifulSoup to scrape the required content
+                    new_soup = BeautifulSoup(new_page, 'html.parser')
+                    # I use the find and find all method of bs4 to extract exact elements. It is accurate and fetches
+                    # the content all the time. The syntax for this is .find(Tag name, attrs = {'attribute': 'value '})
+                    # the below line uses find method to get the section tag which has class = 'newestListings-container'
+                    #container = new_soup.find('section', attrs={'class': 'search-page-results'})
+                
+                    # print (new_soup)
+                    #div_tags = new_soup.find('div', attrs={'class': 'photoViewer-imagesContainer'}).find_all('div', attrs={'class': 'carousel-carouselItem'})
+                    #print (len(div_tags))
+                    #print (div_tags)
+                    
+                    #img_url_list = []
+
+                    # for div in div_tags:
+                    #     img_tag = div.find('img')
+                    #     img_src = img_tag['src']
+                    #     if('product_small' in img_src):
+                    #         img_src = img_src.replace('product_small', '664x500')
+                        #img_url_list.append(img_src)
+
+                    #print (len(img_url_list), img_url_list)
+##
+##                    img_final_list = []
+##                    image_names_list = []
+##                    img_final_str = ""
+##
+##                    for img in img_url_list:
+##                        if(img not in img_final_list):
+##                            img = 'http:' + img
+##                            img_final_list.append(img)
+##
+##                    print (len(img_final_list), img_final_list)
+##
+##                    for image in img_final_list:
+##                        img_final_str = img_final_str + image + "\n"
+##                        img_name = image.split("/")[-2].split("?")[0]
+##                        image_names_list.append(img_name)
+##
+##                    
+##                    print (img_final_str)
+
+##                    for o in range(len(img_final_list)):
+##                        # Open the url image, set stream to True, this will return the stream content.
+##                        image_name = image_names_list[o]
+##                        filename = keyword + "/" + image_name
+##                        
+##                        r = requests.get(img_final_list[o], stream = True)
+##                        print (r)
+##                        # Check if the image was retrieved successfully
+##                        if r.status_code == 200:
+##                            # Set decode_content value to True, otherwise the downloaded image file's size will be zero.
+##                            r.raw.decode_content = True
+##                            
+##                            # Open a local file with wb ( write binary ) permission.
+##                            with open(filename,'wb') as f:
+##                                shutil.copyfileobj(r.raw, f)
+##                                
+##                            print('Image sucessfully Downloaded: ',filename)
+##                        else:
+##                            print('Image Couldn\'t be retreived')
+    
                     subset = (title, price, views, favorites, sellerName, sellerPhone, url)
-                    print("Done:  ", subset)
+                    #print("Done:  ", subset)
                     # after fetching the info, storing them in a temporary data list so that we can write this to a csv file.
                     data.append(subset)
                 else:
-                    print('Could not find information for {} \n probably because the page took too long to load.'.format(
-                        url.strip()))
+                    print ()
+                    #print('Could not find information for {} \n probably because the page took too long to load.'.format(url.strip()))
 
             # Using the csv module, write the data to a csv file.
             with open('{}.csv'.format(keyword), 'w', newline='', encoding='utf8') as f:
@@ -145,7 +239,8 @@ while True:
                 writer.writerow(['title', 'price', 'views', 'favorites', 'sellerName', 'sellerPhone', 'url'])
                 writer.writerows(data)
         else:
-            print('{} is taking too long to load. Proceeding to next keyword!'.format(search_url))
+            print ()
+            #print('{} is taking too long to load. Proceeding to next keyword!'.format(search_url))
 
     driver.quit()
 
@@ -158,6 +253,7 @@ while True:
 
 
     def send_message(info, to_number):
+        print(info)
         account_sid = 'AC4edaa4f9768eb268b7907e9c2680d55d'
         auth_token = 'd410ace8a2f8e51a3ab05bf7ceabec88'
         client = Client(account_sid, auth_token)
@@ -180,7 +276,7 @@ while True:
             price_min_max = quote(row[1]) + "-" + quote(row[2])
             price_range[quote(row[0]).replace(" ","%20")] = price_min_max
 
-    print (price_range)
+    #print (price_range)
 
     df = pd.read_csv('msg.csv')
     #print (df.head())
@@ -188,7 +284,7 @@ while True:
     msgs = df["message"].tolist()
     
     for keyword in keywords:
-        print (keyword)
+        #print (keyword)
         file_name = keyword+'.csv'
         df = pd.read_csv(file_name)
         views_mean = df["views"].mean()
@@ -216,7 +312,7 @@ while True:
         minimum = int(price_range[keyword].split("-")[0])
         maximum = int(price_range[keyword].split("-")[1])
 
-        print (minimum, maximum)
+        #print (minimum, maximum)
         
         for i, j in df.iterrows():
             if(j["favorites"]!=0):
@@ -228,14 +324,14 @@ while True:
                         offer = int(round(offer/5.0)*5.0)   #round to nearest 5 multiple
                         #print (item_price, offer)
                         text = "Hey, " + j["sellerName"] + " Do you still have the " + j["url"] + " ? Could you do " + str(offer) + "?"
-                        print (text)
-                        print ("Price is Good")
-                        print ()
+                        #print (text)
+                        #print ("Price is Good")
+                        #print ()
                         to_number = j["sellerPhone"].replace("-","")
                         txt = j["sellerPhone"]
                         if txt not in msgs:
                             msgs.append(txt)
-                            print (to_number)
+                            #print (to_number)
                             send_message(text, to_number)
                 except:
                     #print (j["price"])
