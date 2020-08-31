@@ -26,4 +26,5 @@ urllib3==1.25.10
 webdriver-manager==3.2.2
 Werkzeug==1.0.1
 flask-script==2.0.6
+Flask-WTF==0.14.3
 WTForms==2.3.3
