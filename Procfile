@@ -1,4 +1,4 @@
 web:gunicorn finally:app
 
-worker:latest_test.py
+worker: python latest_test.py
 
