@@ -7,7 +7,6 @@ colorama==0.4.3
 configparser==5.0.0
 crayons==0.4.0
 Flask==1.1.2
-flask-script-2.0.6
 gunicorn==20.0.4
 idna==2.10
 itsdangerous==1.1.0
@@ -26,3 +25,4 @@ twilio==6.45.0
 urllib3==1.25.10
 webdriver-manager==3.2.2
 Werkzeug==1.0.1
+flask-script==2.0.6
