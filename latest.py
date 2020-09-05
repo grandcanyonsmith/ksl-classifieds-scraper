@@ -13,6 +13,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 from twilio.rest import Client
 
+import os
+import shutil
+import requests
+
 msg_list = []
 
 while True:
@@ -27,8 +31,8 @@ while True:
     def start_driver():
         option = Options()
         # You can comment and uncomment the below 2 lines to get window or windowless mode of the google chrome.
-        option.add_argument('--headless')
-        option.add_argument('--disable-gpu')
+        # option.add_argument('--headless')
+        # option.add_argument('--disable-gpu')
         # Chrome driver manager automatically downloads the latest driver required to run google chrome using selenium.
         return webdriver.Chrome(executable_path=ChromeDriverManager().install(), chrome_options=option)
 
@@ -101,6 +105,18 @@ while True:
 
     # this command is used to actually start the chrome browser
     driver = start_driver()
+    driver.get("https://www.ksl.com/myaccount/login?forward=https%3A%2F%2Fclassifieds.ksl.com%2F")
+
+    username = driver.find_element_by_name('email')
+    username.send_keys('canyonfsmith@gmail.com')
+
+    password = driver.find_element_by_name('password')
+    # password.click()
+    password.send_keys('Wolf7147')
+    # click on submit button
+    username.submit()
+    time.sleep(10)
+
     for keyword in keywords:
         search_url = keyword_url.format(keyword)
 
@@ -108,6 +124,14 @@ while True:
         print("Fetching urls from: ", search_url)
         # fetches all the urls first and then loop over them and fetches each product info one by one.
         urls = get_urls(driver, search_url, website_url)
+        
+##        dir_name = keyword
+##        
+##        try:   
+##            os.makedirs(dir_name)
+##        except:
+##            print ("already exist")
+            
         if urls:
             print("{} items' urls obtained".format(len(urls)))
             for url in urls:
@@ -127,10 +151,80 @@ while True:
                     sellerName = sellerName.text if sellerName else ''
                     sellerPhone = container.find('span', attrs={'class': 'listingContactSeller-optionText'})
                     sellerPhone = sellerPhone.text if sellerPhone else ''
-
                     #print (views)
                     #print (favorites)
                     
+                    #viewAllLink = driver.find_element_by_class_name('photoViewer-viewAllLink')
+                    #viewAllLink.click()
+                    #driver.execute_script("arguments[0].click();", viewAllLink)
+
+                    time.sleep(2)
+                    #img_urls = container.find('div', attrs={'class': 'photoDesktop-photoContainer'}).find_all('img')
+                    #print (img_urls)
+
+                    new_page = driver.page_source
+                    # Then this page source is passed to BeautifulSoup to scrape the required content
+                    new_soup = BeautifulSoup(new_page, 'html.parser')
+                    # I use the find and find all method of bs4 to extract exact elements. It is accurate and fetches
+                    # the content all the time. The syntax for this is .find(Tag name, attrs = {'attribute': 'value '})
+                    # the below line uses find method to get the section tag which has class = 'newestListings-container'
+                    #container = new_soup.find('section', attrs={'class': 'search-page-results'})
+                
+                    # print (new_soup)
+                    #div_tags = new_soup.find('div', attrs={'class': 'photoViewer-imagesContainer'}).find_all('div', attrs={'class': 'carousel-carouselItem'})
+                    #print (len(div_tags))
+                    #print (div_tags)
+                    
+                    #img_url_list = []
+
+                    # for div in div_tags:
+                    #     img_tag = div.find('img')
+                    #     img_src = img_tag['src']
+                    #     if('product_small' in img_src):
+                    #         img_src = img_src.replace('product_small', '664x500')
+                        #img_url_list.append(img_src)
+
+                    #print (len(img_url_list), img_url_list)
+##
+##                    img_final_list = []
+##                    image_names_list = []
+##                    img_final_str = ""
+##
+##                    for img in img_url_list:
+##                        if(img not in img_final_list):
+##                            img = 'http:' + img
+##                            img_final_list.append(img)
+##
+##                    print (len(img_final_list), img_final_list)
+##
+##                    for image in img_final_list:
+##                        img_final_str = img_final_str + image + "\n"
+##                        img_name = image.split("/")[-2].split("?")[0]
+##                        image_names_list.append(img_name)
+##
+##                    
+##                    print (img_final_str)
+
+##                    for o in range(len(img_final_list)):
+##                        # Open the url image, set stream to True, this will return the stream content.
+##                        image_name = image_names_list[o]
+##                        filename = keyword + "/" + image_name
+##                        
+##                        r = requests.get(img_final_list[o], stream = True)
+##                        print (r)
+##                        # Check if the image was retrieved successfully
+##                        if r.status_code == 200:
+##                            # Set decode_content value to True, otherwise the downloaded image file's size will be zero.
+##                            r.raw.decode_content = True
+##                            
+##                            # Open a local file with wb ( write binary ) permission.
+##                            with open(filename,'wb') as f:
+##                                shutil.copyfileobj(r.raw, f)
+##                                
+##                            print('Image sucessfully Downloaded: ',filename)
+##                        else:
+##                            print('Image Couldn\'t be retreived')
+    
                     subset = (title, price, views, favorites, sellerName, sellerPhone, url)
                     print("Done:  ", subset)
                     # after fetching the info, storing them in a temporary data list so that we can write this to a csv file.
@@ -194,9 +288,9 @@ while True:
         views_mean = df["views"].mean()
         #print ("views mean", views_mean)
         favorites_mean = df["favorites"].mean()
-        #print ("favorites mean", favorites_mean)
+        print ("favorites mean", favorites_mean)
         ratio_views_favorites = views_mean/favorites_mean
-        #print ("ratio views favorites", ratio_views_favorites)
+        print ("ratio views favorites", ratio_views_favorites)
         price_sum = 0
         count = 0
         for i, j in df.iterrows():
@@ -245,5 +339,4 @@ while True:
     df.to_csv("msg.csv", index=False, encoding="utf-8")
     
     time.sleep(60*60*12)    #Run once per 12 hours continuosly
-    
     
