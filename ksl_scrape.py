@@ -36,8 +36,6 @@ while True:
     keyword_url = "https://classifieds.ksl.com/search/keyword/{}"
     website_url = "https://classifieds.ksl.com"
 
-    # driver = webdriver.Chrome()
-
     # A simple method to start the chrome driver using selenium. You can check selenium tutorials online.
     # Selenium is used to scrape content from websites which uses javascript to render it's content.
 
