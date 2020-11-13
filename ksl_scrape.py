@@ -311,7 +311,7 @@ while True:
 
         message = client.messages \
             .create(
-                body=f"{info}",
+                body=info,
                 from_='+13852501338',
                 to=to_number
             )
