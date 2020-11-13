@@ -1,0 +1,8 @@
+bs4
+pandas
+requests
+twilio
+webdriver-manager
+psycopg2
+selenium
+peewee

@@ -1,1 +1,1 @@
-bot: python ksl_scrape.py
+bot: python3 ksl_scrape.py
