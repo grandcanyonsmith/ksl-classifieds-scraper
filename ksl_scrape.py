@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from peewee import *
 import pandas as pd
 from twilio.rest import Client
 
