@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_script import Manager, Command, Shell
 from forms import ItemInsertForm
 from forms import ItemRemoveForm
@@ -28,6 +28,7 @@ def insert():
         resp = requests.post(endpoint, json=data)
 
         if resp.status_code == 200:
+            flash(f"{item_name} successfully added to the database")
             print("Data added successfully")
             return redirect(url_for('insert'))
 

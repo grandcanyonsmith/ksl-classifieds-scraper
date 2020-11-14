@@ -7,6 +7,14 @@
 
 <body>
 
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 <form action="" method="post" style="text-align: center">
 
     {{ form.csrf_token() }}
