@@ -24,7 +24,7 @@ def insert():
         print("\nData received. Now redirecting ...")
         endpoint = "https://ksl-classifieds.herokuapp.com/api/add-keyword"
         data = {"item_name": item_name,
-                "minium_price": minimum, "maximum_price": maximum}
+                "minimum_price": minimum, "maximum_price": maximum}
         resp = requests.post(endpoint, json=data)
 
         if resp.status_code == 200:
