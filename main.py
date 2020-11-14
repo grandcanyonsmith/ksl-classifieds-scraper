@@ -65,21 +65,24 @@ def delete():
 
         print("\nData received. Now Searching for removal ...")
 
-        found = df[df['Item'].str.contains(item_name)]
-        isFound = found['Item'].count()
-        print(isFound)
+        endpoint = f"https://ksl-classifieds.herokuapp.com/api/keywords/delete/{item_name}"
+        resp = requests.post(endpoint)
+        if resp.status_code == 200:
+            flash(f"{item_name} successfully deleted from the database")
+            return redirect(url_for('delete'))
+        # found = df[df['Item'].str.contains(item_name)]
+        # isFound = found['Item'].count()
+        # print(isFound)
 
-        if(isFound != 0):
-            print("Item found")
-            new_df = df
-            new_df = new_df[new_df.Item != item_name]
-            new_df.reset_index(drop=True, inplace=True)
-            new_df.to_csv('keywords.csv', index=False)
-            print("Successfully Deleted Item - ", item_name)
-        else:
-            print("Not found")
-
-        return redirect(url_for('delete'))
+        # if(isFound != 0):
+        #     print("Item found")
+        #     new_df = df
+        #     new_df = new_df[new_df.Item != item_name]
+        #     new_df.reset_index(drop=True, inplace=True)
+        #     new_df.to_csv('keywords.csv', index=False)
+        #     print("Successfully Deleted Item - ", item_name)
+        # else:
+        #     print("Not found")
 
     return render_template('item.html', form=form)
 
