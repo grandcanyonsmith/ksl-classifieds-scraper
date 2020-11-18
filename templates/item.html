@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Item</title>
-</head>
+{% extends 'base.html' %}
 
-<body>
+{% block content %}
 
-{% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
             <p style="text-align: center;">{{ message }}</p>
@@ -29,6 +24,22 @@
     {% endfor %}
 
 </form>
+    <div class="container">
+      <div class="card" style="width: 40rem; margin: 0 auto;" >
+        <div class="card-body">
+        {% for keyword in keywords %} 
+          <div class="row justify-content-end align-items-end">
+            <div class="col-md-6">
+              {{ keyword.item_name }}<br><br>
+            </div>
+            <div class="col-md-6">
+              {{ keyword.minimum_price }} - {{ keyword.maximum_price }}
+              <a href="" class="btn btn-danger btn-sm">DELETE</a><br><br>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
 
-</body>
-</html>
+{% endblock content %}

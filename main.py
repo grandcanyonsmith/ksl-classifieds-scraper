@@ -11,6 +11,8 @@ app.config['SECRET_KEY'] = 'a really really really really long secret key'
 @app.route('/insert/', methods=['get', 'post'])
 def insert():
     form = ItemInsertForm()
+    # resp = requests.get("https://ksl-classifieds.herokuapp.com/api/keywords")
+    # keywords = resp.json().get("keywords")
     if form.validate_on_submit():
 
         # df = pd.read_csv('keywords.csv')
@@ -47,49 +49,69 @@ def insert():
         #     print ("Successfully inserted Item - ", item_name)
         else:
             print("Something went wrong")
-            return render_template('item.html', form=form)
+            return render_template('add-item.html', form=form)
 
-    return render_template('item.html', form=form)
+    return render_template('add-item.html', form=form)
 
 
 @app.route('/delete/', methods=['get', 'post'])
 def delete():
-    form = ItemRemoveForm()
-    if form.validate_on_submit():
+    # form = ItemRemoveForm()
+    resp = requests.get("https://ksl-classifieds.herokuapp.com/api/keywords")
+    keywords = resp.json().get("keywords")
 
-        df = pd.read_csv('keywords.csv')
+    return render_template('remove-keyword.html', keywords=keywords)
+    # if form.validate_on_submit():
 
-        item_name = form.remove_item_name.data
+    #     df = pd.read_csv('keywords.csv')
 
-        print(item_name)
+    #     item_name = form.remove_item_name.data
 
-        print("\nData received. Now Searching for removal ...")
+    #     print(item_name)
 
-        endpoint = f"https://ksl-classifieds.herokuapp.com/api/keywords/delete/{item_name}"
-        resp = requests.post(endpoint)
-        if resp.status_code == 200:
-            flash(f"{item_name} successfully deleted from the database")
-            return redirect(url_for('delete'))
-        # found = df[df['Item'].str.contains(item_name)]
-        # isFound = found['Item'].count()
-        # print(isFound)
+    # print("\nData received. Now Searching for removal ...")
 
-        # if(isFound != 0):
-        #     print("Item found")
-        #     new_df = df
-        #     new_df = new_df[new_df.Item != item_name]
-        #     new_df.reset_index(drop=True, inplace=True)
-        #     new_df.to_csv('keywords.csv', index=False)
-        #     print("Successfully Deleted Item - ", item_name)
-        # else:
-        #     print("Not found")
+    # endpoint = f"https://ksl-classifieds.herokuapp.com/api/keywords/delete/{item_name}"
+    # resp = requests.post(endpoint)
+    # if resp.status_code == 200:
+    #     flash(f"{item_name} successfully deleted from the database")
+    #     return redirect(url_for('delete'))
+    # found = df[df['Item'].str.contains(item_name)]
+    # isFound = found['Item'].count()
+    # print(isFound)
 
-    return render_template('item.html', form=form)
+    # if(isFound != 0):
+    #     print("Item found")
+    #     new_df = df
+    #     new_df = new_df[new_df.Item != item_name]
+    #     new_df.reset_index(drop=True, inplace=True)
+    #     new_df.to_csv('keywords.csv', index=False)
+    #     print("Successfully Deleted Item - ", item_name)
+    # else:
+    #     print("Not found")
+
+    # return render_template('delete.html', form=form)
+
+
+@app.route("/remove/")
+def remove_keyword():
+    # endpoint = f"https://ksl-classifieds.herokuapp.com/api/keywords/delete/{item_name}"
+    # resp = requests.post(endpoint)
+    # if resp.status_code == 200:
+    #     flash(f"{item_name} successfully deleted from the database")
+    #     return redirect(url_for('delete'))
+    return render_template("remove-keyword.html")
 
 
 @app.route('/')
-def hello_world():
-    return render_template('main.html')
+def index():
+    url_endpoint = "https://ksl-classifieds.herokuapp.com/api/products"
+    resp = requests.get(url_endpoint)
+    if resp.status_code == 200:
+        products = resp.json().get("products")
+        return render_template('index.html', products=products)
+
+    # return render_template('index.html')
 
 
 if __name__ == "__main__":
