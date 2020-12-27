@@ -103,7 +103,7 @@ def remove_keyword():
     return render_template("remove-keyword.html")
 
 
-@app.route('/')
+@app.route('/', methods=["POST", "GET"])
 def index():
     url_endpoint = "https://ksl-classifieds.herokuapp.com/api/products"
     resp = requests.get(url_endpoint)
