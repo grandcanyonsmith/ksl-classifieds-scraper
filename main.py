@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_script import Manager, Command, Shell
+# from flask_script import Manager, Command, Shell
 from forms import ItemInsertForm
 from forms import ItemRemoveForm
 import requests
@@ -61,6 +61,7 @@ def delete():
     keywords = resp.json().get("keywords")
 
     return render_template('remove-keyword.html', keywords=keywords)
+
     # if form.validate_on_submit():
 
     #     df = pd.read_csv('keywords.csv')
