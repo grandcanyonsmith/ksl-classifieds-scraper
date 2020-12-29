@@ -38,7 +38,7 @@
     element.addEventListener('click', () => {
       const listing_id = element.getAttribute('id');
       console.log(listing_id);
-      const url = 'http://ksl-classifieds.herokuapp.com/api/unwanted/';
+      const url = 'https://ksl-classifieds.herokuapp.com/api/unwanted/';
       fetch(`${url}${listing_id}`, {
         method: 'POST',
       }).then(response => response.json())
