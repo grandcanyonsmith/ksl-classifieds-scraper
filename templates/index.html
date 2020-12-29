@@ -32,11 +32,11 @@
 {% endblock content %}
 {% block scripts %}
 <script>
-  let removeBtns = $(".removeBtn")
+  let removeBtns = document.getElementsByClassName('removeBtn');
   removeBtns.each((index, btn) => {
     btn.addEventListener('click', function () {
       listing_number = btn.getAttribute('id');
-      console.log(listing_number)
+      console.log(listing_number);
     })
   })
 </script>
