@@ -15,8 +15,6 @@
             <div class="row justify-content-between">
               <div class="col-md-6"><a href="">Send</a></div>
               <div class="col-md-6">
-
-
                 <button type="submit" class="btn btn-sm btn-danger removeBtn"
                   id="{{ product.listing_number }}">remove</button>
 
@@ -38,8 +36,9 @@
     element.addEventListener('click', () => {
       const listing_id = element.getAttribute('id');
       console.log(listing_id);
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
       const url = 'https://ksl-classifieds.herokuapp.com/api/unwanted/';
-      fetch(`${url}${listing_id}`, {
+      fetch(`${proxyurl}${url}${listing_id}`, {
         method: 'POST',
       }).then(response => response.json())
         .then(data => {
