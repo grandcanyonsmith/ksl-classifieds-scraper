@@ -33,11 +33,30 @@
 {% block scripts %}
 <script>
   let removeBtns = document.getElementsByClassName('removeBtn');
-  removeBtns.each((index, btn) => {
-    btn.addEventListener('click', function () {
-      listing_number = btn.getAttribute('id');
-      console.log(listing_number);
+  for (let index = 0; index < removeBtns.length; index++) {
+    const element = removeBtns[index];
+    element.addEventListener('click', () => {
+      const listing_id = element.getAttribute('id');
+      console.log(listing_id);
+      const url = 'http://ksl-classifieds.herokuapp.com/api/unwanted/';
+      fetch(`${url}${listing_id}`, {
+        method: 'POST',
+      }).then(response => response.json())
+        .then(data => {
+          console.log(data)
+          location.reload()
+        }).catch(error => {
+          console.log(error);
+        })
     })
-  })
+
+  }
+  // removeBtns.forEach((index, btn) => {
+  //   btn.addEventListener('click', function () {
+  //     console.log("Clicked");
+  //     listing_number = btn.getAttribute('id');
+  //     console.log(listing_number);
+  //   })
+  // })
 </script>
 {% endblock scripts %}
