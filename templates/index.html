@@ -30,6 +30,7 @@
   </div>
 </div>
 {% endblock content %}
+{% block scripts %}
 <script>
   let removeBtns = $(".removeBtn")
   removeBtns.each((index, btn) => {
@@ -39,3 +40,4 @@
     })
   })
 </script>
+{% endblock scripts %}
