@@ -20,7 +20,7 @@
 </div>
 <script>
   const deleteBtns = document.querySelectorAll(".btn-danger");
-  let baseUrl = "https://ksl-classifieds.herokuapp.com/api/keywords/delete/"
+  let baseUrl = "https://ksl-classifieds.herokuapp.com/api/keyword/delete/"
   for (let i = 0; i < deleteBtns.length; i++) {
     const element = deleteBtns[i];
     element.addEventListener("click", () => {
@@ -32,6 +32,8 @@
         .then((data) => {
           console.log(data);
           location.reload();
+        }).catch((error) => {
+          console.log(error);
         });
     })
   }
