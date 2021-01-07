@@ -20,18 +20,18 @@
 </div>
 <script>
   const deleteBtns = document.querySelectorAll(".btn-danger");
-  let baseUrl = "https://ksl-classifieds.herokuapp.com/api/keyword/delete/"
+  let baseUrl = "https://ksl-classifieds.herokuapp.com/api/keyword/delete"
   for (let i = 0; i < deleteBtns.length; i++) {
     const element = deleteBtns[i];
     element.addEventListener("click", () => {
       let item_name = element.getAttribute('id');
       const proxyurl = "https://cors-anywhere.herokuapp.com/";
       console.log(item_name)
-      fetch(proxyurl + baseUrl + item_name, { method: 'POST' })
+      fetch(baseUrl, { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify({ "keyword": item_name }) })
         .then(response => console.log(response))
         .then((data) => {
-          console.log(data);
-          location.reload();
+          console.log('success');
+          locaton.reload();
         }).catch((error) => {
           console.log(error);
         });

@@ -108,6 +108,7 @@ def remove_keyword():
 def index():
     url_endpoint = "https://ksl-classifieds.herokuapp.com/api/products"
     resp = requests.get(url_endpoint)
+    # print(resp.status_code)
     if resp.status_code == 200:
         products = resp.json().get("products")
         return render_template('index.html', products=products)

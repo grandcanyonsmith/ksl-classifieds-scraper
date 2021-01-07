@@ -13,11 +13,12 @@
             <p class="card-title">{{ product.title }}</p>
             <h4 class="badge badge-pill badge-info mb-3"><strong>{{ product.price }}</strong></h4>
             <div class="row justify-content-between">
-              <div class="col-md-6"><a href="">Send</a></div>
+              <div class="col-md-6"><a href="" data-price="{{ product.price }}"
+                  data-itemUrl="{{ product.url }}">Send</a>
+              </div>
               <div class="col-md-6">
                 <button type="submit" class="btn btn-sm btn-danger removeBtn"
                   id="{{ product.listing_number }}">remove</button>
-
               </div>
             </div>
           </div>
@@ -35,6 +36,9 @@
   for (let index = 0; index < removeBtns.length; index++) {
     const element = removeBtns[index];
     element.addEventListener('click', () => {
+      // element.setAttribute('data-sellerName');
+      // element.setAttribute('data-price');
+      // element.setAttribute('data-itemUrl');
       const listing_id = element.getAttribute('id');
       console.log(listing_id);
       const proxyurl = "https://cors-anywhere.herokuapp.com/";
