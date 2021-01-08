@@ -49,6 +49,7 @@
     const sendButton = sendButtons[index];
 
     sendButton.addEventListener('click', () => {
+      sendButton.disabled = true;
       const dataSet = sendButton.dataset;
 
       const price = dataSet.price.replace('$', '');
