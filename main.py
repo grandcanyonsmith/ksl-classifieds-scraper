@@ -113,7 +113,7 @@ def index():
 
 @app.route('/<product_name>')
 def product_page(product_name):
-    product_name = product_name.replace("%20", "")
+
     resp = requests.get(
         f"https://ksl-classifieds.herokuapp.com/api/filter/{product_name}")
     products = resp.json().get("products")
