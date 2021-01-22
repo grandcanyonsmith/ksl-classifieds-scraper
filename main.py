@@ -106,12 +106,18 @@ def remove_keyword():
 
 @app.route('/', methods=["POST", "GET"])
 def index():
-    url_endpoint = "https://ksl-classifieds.herokuapp.com/api/products"
-    resp = requests.get(url_endpoint)
-    # print(resp.status_code)
-    if resp.status_code == 200:
-        products = resp.json().get("products")
-        return render_template('index.html', products=products)
+    resp = requests.get("https://ksl-classifieds.herokuapp.com/api/keywords")
+    keywords = resp.json().get("keywords")
+    return render_template('index.html', keywords=keywords)
+
+
+@app.route('/<product_name>')
+def product_page(product_name):
+    product_name = product_name.replace("%20", "")
+    resp = requests.get(
+        f"https://ksl-classifieds.herokuapp.com/api/filter/{product_name}")
+    products = resp.json().get("products")
+    return render_template('product_page.html', products=products, product_name=product_name)
 
     # return render_template('index.html')
 
